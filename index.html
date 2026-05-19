@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pacespace｜Web広告支援サービス</title>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ink: #1A1A1A;
+      --ink-light: #2E2E2E;
+      --ink-muted: #4A4A4A;
+      --sand: #F3F0EA;
+      --sand-dark: #E8E2D8;
+      --cream: #FDFBF7;
+      --accent: #2D6B5A;
+      --accent-light: #E5EFEB;
+      --accent-hover: #1F5244;
+      --white: #FFFFFF;
+      --border: #D4CEC4;
+    }
+
+    body {
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      color: var(--ink);
+      background: var(--cream);
+      line-height: 1.8;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(44, 44, 44, 0.97);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+      padding: 0 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+    .logo img {
+      height: 36px;
+      width: auto;
+      display: block;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 36px;
+    }
+    nav ul li a {
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      transition: color 0.3s;
+    }
+    nav ul li a:hover { color: var(--white); }
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      display: block; width: 100%; height: 2px;
+      background: var(--white); border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed; top: 68px; left: 0; right: 0;
+      background: rgba(44, 44, 44, 0.98);
+      backdrop-filter: blur(12px);
+      z-index: 99; padding: 24px 0;
+      flex-direction: column;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      display: block; color: rgba(255,255,255,0.85);
+      text-decoration: none; font-size: 15px;
+      padding: 16px 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--ink);
+      color: var(--white);
+      padding: 180px 48px 140px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -30%; left: 50%;
+      transform: translateX(-50%);
+      width: 900px; height: 900px;
+      background: radial-gradient(circle, rgba(58,107,92,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-label {
+      display: inline-block;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.25em;
+      color: rgba(255,255,255,0.45);
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+    .hero h1 {
+      font-size: 50px; font-weight: 700;
+      line-height: 1.5; letter-spacing: 0.06em;
+      margin-bottom: 28px;
+    }
+    .hero-sub {
+      font-size: 20px; font-weight: 300;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 56px;
+      letter-spacing: 0.04em;
+    }
+    .hero-cta {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--white);
+      text-decoration: none;
+      padding: 16px 44px;
+      border-radius: 4px;
+      font-size: 16px; font-weight: 500;
+      letter-spacing: 0.06em;
+      transition: background 0.3s;
+    }
+    .hero-cta:hover { background: var(--accent-hover); }
+
+    /* ── SECTION BASE ── */
+    section { padding: 100px 48px; }
+    .container { max-width: 1060px; margin: 0 auto; }
+    .section-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px; font-weight: 500;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-size: 36px; font-weight: 700;
+      margin-bottom: 18px; line-height: 1.5;
+    }
+    .section-desc {
+      font-size: 17px;
+      color: var(--ink-muted);
+      line-height: 2.0;
+      max-width: 640px;
+    }
+
+    /* ── ABOUT ── */
+    .about { background: var(--cream); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px; margin-top: 56px;
+    }
+    .about-card {
+      background: var(--white);
+      border-radius: 8px;
+      padding: 36px 28px;
+      border: 1px solid var(--border);
+      transition: box-shadow 0.3s;
+    }
+    .about-card:hover {
+      box-shadow: 0 4px 20px rgba(44,44,44,0.06);
+    }
+    .about-number {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      margin-bottom: 18px;
+    }
+    .about-card h3 {
+      font-size: 20px; font-weight: 700;
+      margin-bottom: 14px; line-height: 1.6;
+    }
+    .about-card p {
+      font-size: 16px;
+      color: var(--ink-muted);
+      line-height: 2.0;
+    }
+
+    /* ── SERVICES (TABS) ── */
+    .services { background: var(--sand); }
+    .tab-nav {
+      display: flex;
+      gap: 4px;
+      margin-top: 48px;
+      margin-bottom: 0;
+      border-bottom: 2px solid var(--border);
+    }
+    .tab-btn {
+      padding: 16px 28px;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 16px; font-weight: 700;
+      color: var(--ink-muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.3s;
+      letter-spacing: 0.02em;
+    }
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 2px;
+      background: transparent;
+      transition: background 0.3s;
+    }
+    .tab-btn.active {
+      color: var(--accent);
+    }
+    .tab-btn.active::after {
+      background: var(--accent);
+    }
+    .tab-btn:hover { color: var(--ink); }
+    .tab-panel {
+      display: none;
+      padding: 44px 0 0;
+      animation: fadeIn 0.4s ease;
+    }
+    .tab-panel.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .tab-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+    .tab-desc {
+      font-size: 17px;
+      color: var(--ink-muted);
+      line-height: 2.0;
+      margin-bottom: 28px;
+    }
+    .tab-features {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .tab-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px 20px;
+      background: var(--white);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .tab-feature-icon {
+      width: 32px; height: 32px;
+      background: var(--accent-light);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+    .tab-feature-text {
+      font-size: 16px;
+      color: var(--ink);
+      line-height: 1.7;
+      font-weight: 500;
+    }
+    .tab-feature-sub {
+      font-size: 14px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      margin-top: 2px;
+      font-weight: 400;
+    }
+    .tab-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .tab-tag {
+      display: inline-block;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 14px; font-weight: 500;
+      padding: 5px 14px;
+      border-radius: 100px;
+    }
+
+    /* ── CREATIVE MENU ── */
+    .creative-menu { background: var(--ink); color: var(--white); }
+    .creative-menu .section-title { color: var(--white); }
+    .creative-menu .section-desc { color: rgba(255,255,255,0.55); }
+    .menu-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px; margin-top: 56px;
+    }
+    .menu-card {
+      background: var(--ink-light);
+      padding: 36px 28px;
+      border-radius: 8px;
+      transition: transform 0.3s;
+    }
+    .menu-card:hover { transform: translateY(-4px); }
+    .menu-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .menu-card h3 {
+      font-size: 19px; font-weight: 700;
+      margin-bottom: 14px; line-height: 1.5;
+    }
+    .menu-card p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      line-height: 2.0;
+      margin-bottom: 20px;
+    }
+    .menu-price {
+      font-size: 14px; font-weight: 700;
+      color: var(--accent);
+      padding-top: 16px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .menu-price-sub {
+      font-size: 13px; font-weight: 400;
+      color: rgba(255,255,255,0.35);
+      margin-top: 4px;
+    }
+
+    /* ── PRICING ── */
+    .pricing { background: var(--cream); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px; margin-top: 56px;
+      align-items: stretch;
+    }
+    .pricing-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 36px 28px;
+      display: flex;
+      flex-direction: column;
+    }
+    .pricing-service {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .pricing-card h3 {
+      font-size: 21px; font-weight: 700;
+      margin-bottom: 20px; padding-bottom: 20px;
+      border-bottom: 2px solid var(--ink);
+      line-height: 1.5;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+    }
+    .pricing-rows {
+      flex: 1;
+    }
+    .pricing-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 52px;
+      padding: 0 0;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .pricing-row:last-child { border-bottom: none; }
+    .pricing-item-name {
+      font-size: 15px; color: var(--ink-muted);
+      flex: 1; line-height: 1.5;
+      white-space: nowrap;
+    }
+    .pricing-item-name small {
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+    .pricing-item-price {
+      font-size: 16px; font-weight: 700;
+      color: var(--ink); white-space: nowrap;
+    }
+    .pricing-row-empty {
+      min-height: 52px;
+    }
+    .pricing-note {
+      font-size: 14px; color: var(--ink-muted);
+      margin-top: 18px; line-height: 1.9;
+    }
+    .pricing-tax {
+      text-align: right;
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-top: 24px;
+    }
+
+    /* ── PROCESS ── */
+    .process { background: var(--sand); }
+    .process-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0; margin-top: 56px;
+    }
+    .process-step {
+      padding: 32px 24px;
+      text-align: center;
+      position: relative;
+    }
+    .process-connector {
+      position: absolute;
+      top: 46px; right: -10px;
+      color: var(--accent);
+      font-size: 18px; font-weight: 700;
+      z-index: 2;
+    }
+    .process-step:last-child .process-connector { display: none; }
+    .process-icon {
+      width: 52px; height: 52px;
+      background: var(--accent-light);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+      font-size: 22px;
+    }
+    .process-num {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .process-step h3 {
+      font-size: 18px; font-weight: 700;
+      margin-bottom: 12px; line-height: 1.5;
+    }
+    .process-step p {
+      font-size: 15px; color: var(--ink-muted);
+      line-height: 1.9;
+    }
+    .process-note {
+      margin-top: 40px;
+      padding: 24px 28px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 16px; color: var(--ink-muted);
+      line-height: 2;
+    }
+    .process-note strong { color: var(--ink); }
+
+    /* ── FOR WHO ── */
+    .forwho { background: var(--cream); }
+    .forwho-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .forwho-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 28px 24px;
+      background: var(--white);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .forwho-icon {
+      width: 40px; height: 40px;
+      background: var(--accent-light);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+    .forwho-item p {
+      font-size: 16px;
+      color: var(--ink);
+      line-height: 1.9;
+    }
+
+    /* ── CONTACT ── */
+    .contact {
+      background: var(--ink);
+      color: var(--white);
+      text-align: center;
+      padding: 100px 48px;
+    }
+    .contact .section-title { color: var(--white); font-size: 34px; }
+    .contact p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.6);
+      margin: 20px auto 44px;
+      max-width: 500px; line-height: 2;
+    }
+    .contact-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--white);
+      text-decoration: none;
+      padding: 18px 52px;
+      border-radius: 4px;
+      font-size: 16px; font-weight: 700;
+      letter-spacing: 0.05em;
+      transition: background 0.3s;
+    }
+    .contact-btn:hover { background: var(--accent-hover); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1F1F1F;
+      padding: 24px 48px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    footer .logo img { height: 28px; }
+    footer p {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; }
+      nav ul { display: none; }
+      .hamburger { display: flex; }
+      section { padding: 72px 24px; }
+      .hero { padding: 130px 24px 90px; }
+      .hero h1 { font-size: 28px; }
+      .about-grid { grid-template-columns: 1fr; }
+      .tab-nav { overflow-x: auto; }
+      .tab-content { grid-template-columns: 1fr; }
+      .menu-cards { grid-template-columns: 1fr; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .process-steps { grid-template-columns: 1fr 1fr; gap: 16px; }
+      .process-connector { display: none; }
+      .forwho-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 12px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAC9CAYAAACd+iuQAAAF7klEQVR4nO3d23aqSABFUe2R//9l+8kMjxosNnWVOZ+6T9QCU7IUkFxvt9sFAPb6b/QCALCmnzf/5iMJAH+53v/j+ROIeACw5bcTdmEBEHm3C+vuuvEzAM7j7d4pn0AA+OTtBwoBASAiIABEBASAiIAAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABAREAAiAgJAREAAiAgIABEBASAiIABEBASAiIAAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABAREAAiAgJAREAAiAgIABEBASAiIABEBASAiIAAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABAREAAiAgJAREAAiAgIABEBASAiIABEBASAiIAAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABAREAAiAgJAREAAiAgIABEBASAiIABEBASAiIAAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABD5efr/65ClAGA5PoEAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABAREAAiAgJAREAAiAgIABEBASAiIABEBASAiIAAEBEQACICAkDk58PPbzsf75ouyOAxk7HTcUvH6P1cHhnPPKk/Zs95ApHr7fZ2nu59cb48bnCfEWMeHXvPmD3GODrW3vHMk/pj9pwnsMfj3LxeLq+7sG6X4y/Q54Fa3L7mYxwZu/S+PcaoMVbp/c2TNvftOU/gsJbHQEZM6BEbpB5j9NgAlao9hnlSbwwRoavHgLSYfDNvHFbZKJQ+1sobj5mX/dvmCVTz6SD6s+f9rKW7O5L9s1v36bGb5q9lqBWov9Zv637pc5mOl+o1T47MkZLxVp0n0EVpQP6axPd/r3Fgc88G5H77VraW43Gda2/M7z+rvW4l63O5HFunrXFGzJNaY5aM8Wn83vPk6O8RitQ6BlLjnVzNd59b0nd8e263NcaejV9vrccdMU9SK8wTGKrmQfRvmPArrMPquy56P8ctxptlnsyyHJzU3mMgM1h5A1rygm99MsNZNjpnnyd2Y9HcrAFZ+cVfotWB69KD1c/3W1WreTLL/JtlOeCtmQIy+nTJHhvSGTcI92VaJSSjn8NV5skqv08WNsvFFEdvFFZSekbVXrW+Xd7S7MsHpzJDQGwUypWewTXiek+tzbpcszn6+4diM+3CKvX8vYVaZjnoWGsZWj1PKzjDus8wVzm50QGpda59qdZfQCw1+lTW1c7gOTJPav/Oez43M/0O4MUMu7D+8q0vnhnW65t2c3zr9zxmWAbYVDMgM7yzP6rWOrS8jtfqvmH9v2Ed4LBaAem9K6qlGTcOey7MN+Py35kn/6r9RmPm3z1fqDQgn64Q20Kry5fX+pbvkY116X0fb7fn+Sh5/N6X7z/bPLld5pwnUM2eg+gtXoifDnC2ejGUHFitdeXYmmPsPYA7YmPScoNde8waZpwn0MXMB9FXMfrb7S2MPkts789bWfVsK8Ghi9YBOcOly3tu/Ho8V7PFY+/talsxIqu+cWExrQKy9zTRUS+eXqezrjLGrPFIb7/1OKPmZ+txxINurrfb76fdHqewlhixDz0Zt9UftKoxVssxZpgnR5bBPIHMy5+FKA3I1qUhWk7akccX3o3dc191rbFqj2GefB671zwRDHqqEhDOzTyBc3oJiLOwAIgICAARAQEgIiAARAQEgIiAAPDJ27MvHy+mOMtf62Nu5gmfmB8n8Xw1XufxU8I8AezCAmCX3zeQe/4eCEAJn1BPwicQACL/Awdf9WTyS+loAAAAAElFTkSuQmCC" alt="pacespace"></div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="メニュー">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about" onclick="closeMenu()">About</a>
+    <a href="#services" onclick="closeMenu()">Services</a>
+    <a href="#pricing" onclick="closeMenu()">Pricing</a>
+    <a href="#process" onclick="closeMenu()">Process</a>
+    <a href="#contact" onclick="closeMenu()">Contact</a>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-label">Web Advertising Partner</div>
+    <h1>広告の絡まりを、<br>ひとつずつ紐解く。</h1>
+    <p class="hero-sub">設計・制作・運用を、ワンストップで。</p>
+    <a href="#contact" class="hero-cta">まずは相談する</a>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="section-label">About</div>
+      <h2 class="section-title">pacespaceとは</h2>
+      <p class="section-desc">
+        pace（歩幅）× space（余白）。<br>
+        絡まった課題をひとつずつ丁寧に紐解いて、<br>
+        そこから生まれる余白を、次のチャレンジにつなげる。<br>
+        歩幅を合わせて、一歩ずつ。
+      </p>
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="about-number">01</div>
+          <h3>数字合わせではない<br>広告設計</h3>
+          <p>KPIの設計、訴求軸の整理、撤退ラインの策定。成果の出る構造を、配信前に組み立てます。</p>
+        </div>
+        <div class="about-card">
+          <div class="about-number">02</div>
+          <h3>設計から運用まで<br>一気通貫</h3>
+          <p>戦略設計・クリエイティブ制作・広告配信・改善まで、同じ視点で一貫して担います。情報の分断がなく、判断が速い。</p>
+        </div>
+        <div class="about-card">
+          <div class="about-number">03</div>
+          <h3>自走できる組織を<br>一緒につくる</h3>
+          <p>代理店への丸投げではなく、インハウス運用やハイブリッド体制を推奨。自社でできることを増やす支援を大切にしています。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES (TABS) -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-label">Services</div>
+      <h2 class="section-title">サービスメニュー</h2>
+      <p class="section-desc">3つの領域で、広告の課題をまるごとサポートします。</p>
+
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="ops">運用代行</button>
+        <button class="tab-btn" data-tab="creative">クリエイティブDR・制作</button>
+        <button class="tab-btn" data-tab="inhouse">インハウス支援</button>
+      </div>
+
+      <!-- TAB: 運用代行 -->
+      <div class="tab-panel active" id="tab-ops">
+        <div class="tab-content">
+          <div>
+            <p class="tab-desc">広告アカウントの設計から出稿準備、日々の数値管理、レポーティングまで丸ごとお任せいただけます。<br><br>広告費はクライアント様ご負担、管理画面はクライアント様のものを使用。pacespaceは手数料をいただく形式です。</p>
+            <div class="tab-tags">
+              <span class="tab-tag">Google広告</span>
+              <span class="tab-tag">Meta広告</span>
+              <span class="tab-tag">Yahoo!広告</span>
+              <span class="tab-tag">LINE広告</span>
+              <span class="tab-tag">GA活用</span>
+              <span class="tab-tag">Clarity活用</span>
+            </div>
+          </div>
+          <div class="tab-features">
+            <div class="tab-feature">
+              <div class="tab-feature-icon">📐</div>
+              <div>
+                <div class="tab-feature-text">アカウント設計</div>
+                <div class="tab-feature-sub">KPI設計・撤退ライン策定・キャンペーン構成</div>
+              </div>
+            </div>
+            <div class="tab-feature">
+              <div class="tab-feature-icon">🏷️</div>
+              <div>
+                <div class="tab-feature-text">タグ設置・出稿準備</div>
+                <div class="tab-feature-sub">コンバージョンタグ・GTM設定・入稿作業</div>
+              </div>
+            </div>
+            <div class="tab-feature">
+              <div class="tab-feature-icon">📊</div>
+              <div>
+                <div class="tab-feature-text">運用・最適化</div>
+                <div class="tab-feature-sub">デイリー数値チェック・入札調整・予算管理</div>
+              </div>
+            </div>
+            <div class="tab-feature">
+              <div class="tab-feature-icon">📋</div>
+              <div>
+                <div class="tab-feature-text">レポーティング</div>
+                <div class="tab-feature-sub">月次レポート・改善提案・次月施策立案</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: クリエイティブ -->
+      <div class="tab-panel" id="tab-creative">
+        <div class="tab-content">
+          <div>
+            <p class="tab-desc">「誰に・何を・どう伝えるか」の設計から、バナー制作・LP修正・継続的な改善ディレクションまで対応します。<br><br>AIを活用したクリエイティブ制作にも対応。複数パターンのテストを効率よく回せます。スポット・月額どちらもOK。</p>
+            <div class="tab-tags">
+              <span class="tab-tag">訴求軸設計</span>
+              <span class="tab-tag">コピーライティング</span>
+              <span class="tab-tag">バナー制作</span>
+              <span class="tab-tag">LP修正</span>
+              <span class="tab-tag">AI活用</span>
+            </div>
+          </div>
+          <div class="tab-features">
+            <div class="tab-feature">
+              <div class="tab-feature-icon">🎯</div>
+              <div>
+                <div class="tab-feature-text">訴求軸設計</div>
+                <div class="tab-feature-sub">競合・市場・商品調査をもとにWHO/WHAT/HOWを整理</div>
+              </div>
+            </div>
+            <div class="tab-feature">
+              <div class="tab-feature-icon">🎨</div>
+              <div>
+                <div class="tab-feature-text">クリエイティブ制作</div>
+                <div class="tab-feature-sub">バナー制作・テストパターン作成（AI活用あり）</div>
+              </div>
+            </div>
+            <div class="tab-feature">
+              <div class="tab-feature-icon">🔄</div>
+              <div>
+                <div class="tab-feature-text">テスト設計・検証</div>
+                <div class="tab-feature-sub">クリエイティブのABテスト設計と効果測定</div>
+              </div>
+            </div>
+            <div class="tab-feature">
+              <div class="tab-feature-icon">📝</div>
+              <div>
+                <div class="tab-feature-text">月額ディレクション</div>
+                <div class="tab-feature-sub">毎月の評価・改善案・新訴求の提案</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: インハウス支援 -->
+      <div class="tab-panel" id="tab-inhouse">
+        <div class="tab-content">
+          <div>
+            <p class="tab-desc">「社内で広告を回せるチームをつくりたい」方へ。代理店丸投げから脱却し、インハウス運用またはハイブリッド体制への移行を伴走型でサポートします。<br><br>自社でできることを増やしたい方に。</p>
+            <div class="tab-tags">
+              <span class="tab-tag">体制設計</span>
+              <span class="tab-tag">担当者育成</span>
+              <span class="tab-tag">運用フロー構築</span>
+              <span class="tab-tag">ツール整備</span>
+            </div>
+          </div>
+          <div class="tab-features">
+            <div class="tab-feature">
+              <div class="tab-feature-icon">🔍</div>
+              <div>
+                <div class="tab-feature-text">現状課題の整理</div>
+                <div class="tab-feature-sub">広告運用の現状診断・課題の棚卸し</div>
+              </div>
+            </div>
+            <div class="tab-feature">
+              <div class="tab-feature-icon">🏗️</div>
+              <div>
+                <div class="tab-feature-text">体制・フロー設計</div>
+                <div class="tab-feature-sub">インハウス or ハイブリッドの最適体制を設計</div>
+              </div>
+            </div>
+            <div class="tab-feature">
+              <div class="tab-feature-icon">👤</div>
+              <div>
+                <div class="tab-feature-text">担当者育成</div>
+                <div class="tab-feature-sub">実務を通じたOJT形式のスキルトランスファー</div>
+              </div>
+            </div>
+            <div class="tab-feature">
+              <div class="tab-feature-icon">🛠️</div>
+              <div>
+                <div class="tab-feature-text">ツール整備</div>
+                <div class="tab-feature-sub">GA・Clarity等の導入・運用定着サポート</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">料金</h2>
+      <p class="section-desc">必要なサービスを、必要な分だけ。<br>複数の組み合わせも柔軟に対応します。</p>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="pricing-service">Service 01</div>
+          <h3>広告運用代行</h3>
+          <div class="pricing-rows">
+            <div class="pricing-row">
+              <span class="pricing-item-name">月額フィー</span>
+              <span class="pricing-item-price">広告費の10%</span>
+            </div>
+            <div class="pricing-row">
+              <span class="pricing-item-name">最低フィー</span>
+              <span class="pricing-item-price">¥100,000 ／月</span>
+            </div>
+            <div class="pricing-row">
+              <span class="pricing-item-name">新規媒体の初期設定</span>
+              <span class="pricing-item-price">¥100,000 ／媒体</span>
+            </div>
+            <div class="pricing-row-empty"></div>
+          </div>
+          <p class="pricing-note">※広告費¥1,000,000未満は月額¥100,000固定 ※初期設定費は初回のみ</p>
+        </div>
+        <div class="pricing-card">
+          <div class="pricing-service">Service 02</div>
+          <h3>クリエイティブDR</h3>
+          <div class="pricing-rows">
+            <div class="pricing-row">
+              <span class="pricing-item-name">訴求軸設計 <small>（調査込み）</small></span>
+              <span class="pricing-item-price">¥100,000 ／回</span>
+            </div>
+            <div class="pricing-row">
+              <span class="pricing-item-name">バナー制作</span>
+              <span class="pricing-item-price">¥10,000 ／種</span>
+            </div>
+            <div class="pricing-row">
+              <span class="pricing-item-name">月額DR <small>（単体）</small></span>
+              <span class="pricing-item-price">¥100,000 ／月</span>
+            </div>
+            <div class="pricing-row">
+              <span class="pricing-item-name">月額DR <small>（運用併用）</small></span>
+              <span class="pricing-item-price">¥50,000 ／月</span>
+            </div>
+          </div>
+          <p class="pricing-note">※バナーは2サイズ1セット ※LP修正は別途お見積もり</p>
+        </div>
+        <div class="pricing-card">
+          <div class="pricing-service">Service 03</div>
+          <h3>インハウス支援</h3>
+          <div class="pricing-rows">
+            <div class="pricing-row">
+              <span class="pricing-item-name">月額</span>
+              <span class="pricing-item-price">¥200,000 ／月</span>
+            </div>
+            <div class="pricing-row-empty"></div>
+            <div class="pricing-row-empty"></div>
+            <div class="pricing-row-empty"></div>
+          </div>
+          <p class="pricing-note">※最低契約期間3ヶ月〜 ※支援内容は初回ヒアリングのうえ設計</p>
+        </div>
+      </div>
+      <p class="pricing-tax">※表示価格はすべて税抜です</p>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process" id="process">
+    <div class="container">
+      <div class="section-label">Process</div>
+      <h2 class="section-title">ご依頼の進め方</h2>
+      <p class="section-desc">初回のご相談からプロジェクト開始まで、<br>4つのステップで進めます。</p>
+      <div class="process-steps">
+        <div class="process-step">
+          <div class="process-connector">→</div>
+          <div class="process-icon">💬</div>
+          <div class="process-num">STEP 01</div>
+          <h3>無料ヒアリング</h3>
+          <p>現状の課題やご要望をお聞かせください。オンラインで30〜60分程度。</p>
+        </div>
+        <div class="process-step">
+          <div class="process-connector">→</div>
+          <div class="process-icon">📋</div>
+          <div class="process-num">STEP 02</div>
+          <h3>ご提案・お見積もり</h3>
+          <p>ヒアリングをもとに、最適なサービスとお見積もりをご提示します。</p>
+        </div>
+        <div class="process-step">
+          <div class="process-connector">→</div>
+          <div class="process-icon">🤝</div>
+          <div class="process-num">STEP 03</div>
+          <h3>ご契約・準備</h3>
+          <p>広告アカウントの共有や素材準備など、開始に向けた環境を整えます。</p>
+        </div>
+        <div class="process-step">
+          <div class="process-icon">🚀</div>
+          <div class="process-num">STEP 04</div>
+          <h3>プロジェクト開始</h3>
+          <p>配信開始後はデイリーで数値を確認し、定期的に改善提案を行います。</p>
+        </div>
+      </div>
+      <div class="process-note">
+        <strong>💡 まずはご相談だけでもOKです。</strong><br>
+        「自社に合うかわからない」「予算が決まっていない」という段階でも大丈夫です。現状をお聞きして、お力になれるかどうかを率直にお伝えします。
+      </div>
+    </div>
+  </section>
+
+  <!-- FOR WHO -->
+  <section class="forwho">
+    <div class="container">
+      <div class="section-label">For Who</div>
+      <h2 class="section-title">こんな方に選ばれています</h2>
+      <div class="forwho-grid">
+        <div class="forwho-item">
+          <div class="forwho-icon">📈</div>
+          <p>広告は出しているが成果が伸び悩んでいて、原因が運用なのかクリエイティブなのかわからない</p>
+        </div>
+        <div class="forwho-item">
+          <div class="forwho-icon">🏠</div>
+          <p>代理店に丸投げではなく、将来的に社内で広告を回せるチームをつくりたい</p>
+        </div>
+        <div class="forwho-item">
+          <div class="forwho-icon">✏️</div>
+          <p>バナーやLPは作れるが、何を言えば刺さるのかという「訴求の設計」に自信が持てない</p>
+        </div>
+        <div class="forwho-item">
+          <div class="forwho-icon">🤝</div>
+          <p>管理画面を触るだけでなく、商品の強みを一緒に掘り下げてくれるパートナーが欲しい</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="section-label">Contact</div>
+      <h2 class="section-title">まずはお気軽にご相談ください</h2>
+      <p>サービスの詳細や料金についてのご質問、<br>「自社に合うか相談したい」といったお問い合わせも歓迎です。</p>
+      <a href="https://docs.google.com/forms/d/e/1FAIpQLSfiJWnMINczlVFr-EvlnNMkjdlkJNpTq19yx81NyqTQWeCRhg/viewform?usp=sharing&ouid=101769678275774669660" target="_blank" class="contact-btn">お問い合わせフォームへ</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAAC9CAYAAACd+iuQAAAF7klEQVR4nO3d23aqSABFUe2R//9l+8kMjxosNnWVOZ+6T9QCU7IUkFxvt9sFAPb6b/QCALCmnzf/5iMJAH+53v/j+ROIeACw5bcTdmEBEHm3C+vuuvEzAM7j7d4pn0AA+OTtBwoBASAiIABEBASAiIAAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABAREAAiAgJAREAAiAgIABEBASAiIABEBASAiIAAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABAREAAiAgJAREAAiAgIABEBASAiIABEBASAiIAAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABAREAAiAgJAREAAiAgIABEBASAiIABEBASAiIAAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABAREAAiAgJAREAAiAgIABEBASAiIABEBASAiIAAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABD5efr/65ClAGA5PoEAEBEQACICAkBEQACICAgAEQEBICIgAEQEBICIgAAQERAAIgICQERAAIgICAARAQEgIiAARAQEgIiAABAREAAiAgJAREAAiAgIABEBASAiIABEBASAiIAAEBEQACICAkDk58PPbzsf75ouyOAxk7HTcUvH6P1cHhnPPKk/Zs95ApHr7fZ2nu59cb48bnCfEWMeHXvPmD3GODrW3vHMk/pj9pwnsMfj3LxeLq+7sG6X4y/Q54Fa3L7mYxwZu/S+PcaoMVbp/c2TNvftOU/gsJbHQEZM6BEbpB5j9NgAlao9hnlSbwwRoavHgLSYfDNvHFbZKJQ+1sobj5mX/dvmCVTz6SD6s+f9rKW7O5L9s1v36bGb5q9lqBWov9Zv637pc5mOl+o1T47MkZLxVp0n0EVpQP6axPd/r3Fgc88G5H77VraW43Gda2/M7z+rvW4l63O5HFunrXFGzJNaY5aM8Wn83vPk6O8RitQ6BlLjnVzNd59b0nd8e263NcaejV9vrccdMU9SK8wTGKrmQfRvmPArrMPquy56P8ctxptlnsyyHJzU3mMgM1h5A1rygm99MsNZNjpnnyd2Y9HcrAFZ+cVfotWB69KD1c/3W1WreTLL/JtlOeCtmQIy+nTJHhvSGTcI92VaJSSjn8NV5skqv08WNsvFFEdvFFZSekbVXrW+Xd7S7MsHpzJDQGwUypWewTXiek+tzbpcszn6+4diM+3CKvX8vYVaZjnoWGsZWj1PKzjDus8wVzm50QGpda59qdZfQCw1+lTW1c7gOTJPav/Oez43M/0O4MUMu7D+8q0vnhnW65t2c3zr9zxmWAbYVDMgM7yzP6rWOrS8jtfqvmH9v2Ed4LBaAem9K6qlGTcOey7MN+Py35kn/6r9RmPm3z1fqDQgn64Q20Kry5fX+pbvkY116X0fb7fn+Sh5/N6X7z/bPLld5pwnUM2eg+gtXoifDnC2ejGUHFitdeXYmmPsPYA7YmPScoNde8waZpwn0MXMB9FXMfrb7S2MPkts789bWfVsK8Ghi9YBOcOly3tu/Ho8V7PFY+/talsxIqu+cWExrQKy9zTRUS+eXqezrjLGrPFIb7/1OKPmZ+txxINurrfb76fdHqewlhixDz0Zt9UftKoxVssxZpgnR5bBPIHMy5+FKA3I1qUhWk7akccX3o3dc191rbFqj2GefB671zwRDHqqEhDOzTyBc3oJiLOwAIgICAARAQEgIiAARAQEgIiAAPDJ27MvHy+mOMtf62Nu5gmfmB8n8Xw1XufxU8I8AezCAmCX3zeQe/4eCEAJn1BPwicQACL/Awdf9WTyS+loAAAAAElFTkSuQmCC" alt="pacespace"></div>
+    <p>© 2026 pacespace. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Hamburger
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+    function closeMenu() {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    }
+
+    // Tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
