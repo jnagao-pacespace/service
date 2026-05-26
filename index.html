@@ -438,6 +438,78 @@
       margin-top: 24px;
     }
 
+    /* ── PRICING SIMULATION ── */
+    .pricing-sim {
+      margin-top: 48px;
+    }
+    .pricing-sim h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+    .sim-cases {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .sim-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px 24px;
+    }
+    .sim-label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .sim-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sim-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 15px;
+      color: var(--ink-muted);
+    }
+    .sim-row span:last-child {
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .sim-row-empty {
+      padding: 8px 0;
+      font-size: 15px;
+      visibility: hidden;
+    }
+    .sim-row-empty::after {
+      content: '\00a0';
+    }
+    .sim-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 0 0;
+      margin-top: 10px;
+      border-top: 2px solid var(--ink);
+      font-size: 16px;
+      font-weight: 700;
+    }
+    .sim-note {
+      font-size: 14px;
+      color: var(--ink-muted);
+      margin-top: 16px;
+    }
+
     /* ── PROCESS ── */
     .process { background: var(--sand); }
     .process-steps {
@@ -525,6 +597,41 @@
       line-height: 1.9;
     }
 
+    /* ── FAQ ── */
+    .faq { background: var(--sand); }
+    .faq-list {
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 28px 0;
+    }
+    .faq-item:first-child { padding-top: 0; }
+    .faq-item:last-child { border-bottom: none; }
+    .faq-q {
+      font-size: 17px;
+      font-weight: 700;
+      line-height: 1.7;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 10px;
+    }
+    .faq-q-label {
+      color: var(--accent);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .faq-a {
+      font-size: 16px;
+      color: var(--ink-muted);
+      line-height: 1.9;
+      padding-left: 30px;
+    }
+
     /* ── CONTACT ── */
     .contact {
       background: var(--ink);
@@ -580,6 +687,7 @@
       .tab-content { grid-template-columns: 1fr; }
       .menu-cards { grid-template-columns: 1fr; }
       .pricing-grid { grid-template-columns: 1fr; }
+      .sim-cases { grid-template-columns: 1fr; }
       .process-steps { grid-template-columns: 1fr 1fr; gap: 16px; }
       .process-connector { display: none; }
       .forwho-grid { grid-template-columns: 1fr; }
@@ -641,7 +749,7 @@
         <div class="about-card">
           <div class="about-number">02</div>
           <h3>設計から運用まで<br>一気通貫</h3>
-          <p>戦略設計・クリエイティブ制作・広告配信・改善まで、同じ視点で一貫して担います。情報の分断がなく、判断が速い。</p>
+          <p>コンセプト設計から、クリエイティブ制作・広告配信・改善まで、同じ視点で一貫して対応いたします。工程間の情報の分断がなく、判断のスピードが上がります。</p>
         </div>
         <div class="about-card">
           <div class="about-number">03</div>
@@ -716,8 +824,9 @@
       <div class="tab-panel" id="tab-creative">
         <div class="tab-content">
           <div>
-            <p class="tab-desc">「誰に・何を・どう伝えるか」の設計から、バナー制作・LP修正・継続的な改善ディレクションまで対応します。<br><br>AIを活用したクリエイティブ制作にも対応。複数パターンのテストを効率よく回せます。スポット・月額どちらもOK。</p>
+            <p class="tab-desc">商品の強みの棚卸しやコンセプト設計から、「誰に・何を・どう伝えるか」の訴求軸を整理。バナー制作・LP修正・継続的な改善ディレクションまで対応します。<br><br>AIを活用したクリエイティブ制作にも対応。複数パターンのテストを効率よく回せます。スポット・月額どちらもOK。</p>
             <div class="tab-tags">
+              <span class="tab-tag">コンセプト設計</span>
               <span class="tab-tag">訴求軸設計</span>
               <span class="tab-tag">コピーライティング</span>
               <span class="tab-tag">バナー制作</span>
@@ -729,8 +838,8 @@
             <div class="tab-feature">
               <div class="tab-feature-icon">🎯</div>
               <div>
-                <div class="tab-feature-text">訴求軸設計</div>
-                <div class="tab-feature-sub">競合・市場・商品調査をもとにWHO/WHAT/HOWを整理</div>
+                <div class="tab-feature-text">コンセプト・訴求軸設計</div>
+                <div class="tab-feature-sub">商品の強み整理・競合調査をもとに訴求軸を設計</div>
               </div>
             </div>
             <div class="tab-feature">
@@ -872,6 +981,42 @@
         </div>
       </div>
       <p class="pricing-tax">※表示価格はすべて税抜です</p>
+
+      <div class="pricing-sim">
+        <h3>ご利用イメージ</h3>
+        <div class="sim-cases">
+          <div class="sim-card">
+            <div class="sim-label">Case 1</div>
+            <div class="sim-title">月額広告費 50万円 ＋ クリエイティブDR</div>
+            <div class="sim-row">
+              <span>運用代行</span>
+              <span>¥100,000 <small>（最低フィー適用）</small></span>
+            </div>
+            <div class="sim-row">
+              <span>クリエイティブDR</span>
+              <span>¥50,000 <small>（運用併用）</small></span>
+            </div>
+            <div class="sim-total">
+              <span>月額合計</span>
+              <span>¥150,000（税抜）</span>
+            </div>
+          </div>
+          <div class="sim-card">
+            <div class="sim-label">Case 2</div>
+            <div class="sim-title">月額広告費 200万円（運用代行のみ）</div>
+            <div class="sim-row">
+              <span>運用代行</span>
+              <span>¥200,000 <small>（広告費の10%）</small></span>
+            </div>
+            <div class="sim-row-empty"></div>
+            <div class="sim-total">
+              <span>月額合計</span>
+              <span>¥200,000（税抜）</span>
+            </div>
+            <p class="sim-note">※運用代行フィーは月額広告費に応じて変動します</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -938,6 +1083,36 @@
         <div class="forwho-item">
           <div class="forwho-icon">🤝</div>
           <p>管理画面を触るだけでなく、商品の強みを一緒に掘り下げてくれるパートナーが欲しい</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <div class="container">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">よくあるご質問</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-q"><span class="faq-q-label">Q.</span>代理店に外注していますが、アドバイザーとしての支援も可能ですか？</div>
+          <div class="faq-a">はい、広告代理店様と連携して進めるご支援も可能です。</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="faq-q-label">Q.</span>広告費の支払いもお願いできますか？</div>
+          <div class="faq-a">申し訳ございません。広告費はご依頼企業様ご自身でのお支払いをお願いしております。</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="faq-q-label">Q.</span>クリエイティブ制作だけお願いできますか？</div>
+          <div class="faq-a">はい、訴求軸設計のみ、バナー制作のみなど、必要なメニューだけご利用いただけます。</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="faq-q-label">Q.</span>最低契約期間はありますか？</div>
+          <div class="faq-a">運用代行・クリエイティブDRは1ヶ月から。インハウス支援のみ最低3ヶ月です。</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="faq-q-label">Q.</span>対応媒体を教えてください。</div>
+          <div class="faq-a">Google・Meta（Instagram含む）を主軸に、Yahoo!・LINE等にも対応しています。</div>
         </div>
       </div>
     </div>
